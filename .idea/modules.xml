@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DL10RoundMenuView.iml" filepath="$PROJECT_DIR$/DL10RoundMenuView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dlroundmenuview/dlroundmenuview.iml" filepath="$PROJECT_DIR$/dlroundmenuview/dlroundmenuview.iml" />
     </modules>
   </component>
 </project>
