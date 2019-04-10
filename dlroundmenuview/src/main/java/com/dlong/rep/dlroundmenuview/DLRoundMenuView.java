@@ -23,6 +23,7 @@ import com.dlong.rep.dlroundmenuview.Interface.OnMenuLongClickListener;
 import com.dlong.rep.dlroundmenuview.utils.DLMathUtils;
 import com.dlong.rep.dlroundmenuview.utils.DrawableUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -63,7 +64,7 @@ public class DLRoundMenuView extends View {
     /** 菜单偏移角度 */
     private float mRoundMenuDeviationDegree;
     /** 菜单图片 */
-    private Bitmap mRoundMenuDrawable;
+    private ArrayList<Bitmap> mRoundMenuDrawableList;
     /** 是否画每个菜单扇形到中心点的直线 */
     private boolean mIsDrawLineToCenter;
     /** 菜单正常背景颜色 */
@@ -169,12 +170,15 @@ public class DLRoundMenuView extends View {
         if (null == drawable){
             drawable = defaultRoundMenuDrawable;
         }
+        Bitmap roundMenuDrawable;
         if (null != drawable){
-            mRoundMenuDrawable = DrawableUtils.drawableToBitmap(drawable);
+            roundMenuDrawable = DrawableUtils.drawableToBitmap(drawable);
         } else {
-            mRoundMenuDrawable = null;
+            roundMenuDrawable = null;
         }
-
+        for (int i = 0; i < mRoundMenuNumber; i++) {
+            mRoundMenuDrawableList.set(i, roundMenuDrawable);
+        }
         // 释放内存，回收资源
         a.recycle();
     }
@@ -229,12 +233,13 @@ public class DLRoundMenuView extends View {
                 paint.setColor(mRoundMenuStrokeColor);
                 canvas.drawArc(rect, mRealRoundMenuDeviationDegree + (i * sweepAngle), sweepAngle, mIsDrawLineToCenter, paint);
                 // 画图案
-                if (null != mRoundMenuDrawable){
+                Bitmap roundMenuDrawable = mRoundMenuDrawableList.get(i);
+                if (null != roundMenuDrawable){
                     Matrix matrix = new Matrix();
-                    matrix.postTranslate((float) ((mCoreX + getWidth() / 2 * mRoundMenuDistance) - (mRoundMenuDrawable.getWidth() / 2)),
-                            mCoreY - ((float) mRoundMenuDrawable.getHeight() / 2));
+                    matrix.postTranslate((float) ((mCoreX + getWidth() / 2 * mRoundMenuDistance) - (roundMenuDrawable.getWidth() / 2)),
+                            mCoreY - ((float) roundMenuDrawable.getHeight() / 2));
                     matrix.postRotate(mRoundMenuDeviationDegree - 90 + (i * sweepAngle), mCoreX, mCoreY);
-                    canvas.drawBitmap(mRoundMenuDrawable, matrix, null);
+                    canvas.drawBitmap(roundMenuDrawable, matrix, null);
                 }
             }
         }
@@ -433,8 +438,10 @@ public class DLRoundMenuView extends View {
      * 设定菜单的图片
      * @param drawable 图片
      */
-    public void setRoundMenuDrawable(Drawable drawable){
-        this.mRoundMenuDrawable = DrawableUtils.drawableToBitmap(drawable);
+    public void setRoundMenuDrawable(int index, Drawable drawable){
+        if (index < 0 || index > mRoundMenuNumber) return;
+        Bitmap bitmap = DrawableUtils.drawableToBitmap(drawable);
+        this.mRoundMenuDrawableList.set(index, bitmap);
         invalidate();
     }
 
