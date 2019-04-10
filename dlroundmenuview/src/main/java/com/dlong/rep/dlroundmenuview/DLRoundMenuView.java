@@ -411,7 +411,7 @@ public class DLRoundMenuView extends View {
      * 设定中间按钮的居中图片
      * @param drawable 图片
      */
-    public void setmCoreMenuDrawable(Drawable drawable){
+    public void setCoreMenuDrawable(Drawable drawable){
         this.mCoreMenuDrawable = DrawableUtils.drawableToBitmap(drawable);
         invalidate();
     }
