@@ -18,9 +18,11 @@ public class DrawableUtils {
      * @return
      */
     public static Bitmap drawableToBitmap(Drawable drawable){
+        if (null == drawable) return null;
         // 取drawable的长宽
         int width = drawable.getIntrinsicWidth();
         int height = drawable.getIntrinsicHeight();
+        if (width <= 0 || height <= 0) return null;
         // 取drawable的颜色格式
         Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ?
                 Bitmap.Config.ARGB_8888:Bitmap.Config.RGB_565;

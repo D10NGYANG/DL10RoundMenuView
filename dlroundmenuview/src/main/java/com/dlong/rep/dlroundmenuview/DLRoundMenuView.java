@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -37,7 +38,7 @@ public class DLRoundMenuView extends View {
     /** 点击中间点 */
     public static final int DL_TOUCH_CENTER = -1;
     /** 预设长按时间 */
-    public static final int DL_DEFAULT_LONG_CLICK_TIME = 400;
+    public int DL_DEFAULT_LONG_CLICK_TIME = 400;
 
     /** 中心点的坐标X */
     private float mCoreX;
@@ -61,8 +62,6 @@ public class DLRoundMenuView extends View {
     private int mRoundMenuNumber;
     /** 菜单偏移角度 */
     private float mRoundMenuDeviationDegree;
-    /** 真实菜单偏移角度 */
-    private float mRealRoundMenuDeviationDegree;
     /** 菜单图片 */
     private Bitmap mRoundMenuDrawable;
     /** 是否画每个菜单扇形到中心点的直线 */
@@ -85,22 +84,6 @@ public class DLRoundMenuView extends View {
     /** 设置接口 */
     private OnMenuClickListener mMenuClickListener;
     private OnMenuLongClickListener mMenuLongClickListener;
-
-    /**
-     * 设置点击监听
-     * @param onMenuClickListener
-     */
-    public void setOnItemClickListener(OnMenuClickListener onMenuClickListener){
-        this.mMenuClickListener = onMenuClickListener;
-    }
-
-    /**
-     * 设置长按监听
-     * @param onMenuLongClickListener
-     */
-    public void setOnLongItemClickListener(OnMenuLongClickListener onMenuLongClickListener){
-        this.mMenuLongClickListener = onMenuLongClickListener;
-    }
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler(){
@@ -230,7 +213,8 @@ public class DLRoundMenuView extends View {
             // 一个重要的点 0度在正X轴上，所以需要让它回到正Y轴上
             // 计算真正的偏移角度
             // -90度回到正Y轴；-每个菜单占据角度的一半，使得菜单中央回到正Y轴；再加上用户自己想修改的角度偏移
-            mRealRoundMenuDeviationDegree = mRoundMenuDeviationDegree - (sweepAngle / 2) - 90;
+            /** 真实菜单偏移角度 */
+            float mRealRoundMenuDeviationDegree = mRoundMenuDeviationDegree - (sweepAngle / 2) - 90;
             for (int i = 0; i < mRoundMenuNumber; i++) {
                 // 画扇形
                 Paint paint = new Paint();
@@ -339,5 +323,173 @@ public class DLRoundMenuView extends View {
         return true;
     }
 
+    /**
+     * 设置点击监听
+     * @param onMenuClickListener
+     */
+    public void setOnItemClickListener(OnMenuClickListener onMenuClickListener){
+        this.mMenuClickListener = onMenuClickListener;
+    }
 
+    /**
+     * 设置长按监听
+     * @param onMenuLongClickListener
+     */
+    public void setOnLongItemClickListener(OnMenuLongClickListener onMenuLongClickListener){
+        this.mMenuLongClickListener = onMenuLongClickListener;
+    }
+
+    /**
+     * 设定长按时间判断
+     * @param millisecond  毫秒
+     */
+    public void setLongClickTime(int millisecond){
+        this.DL_DEFAULT_LONG_CLICK_TIME = millisecond;
+        invalidate();
+    }
+
+    /**
+     * 设定是否有中间按钮
+     * @param hasCoreMenu true
+     */
+    public void setHasCoreMenu(boolean hasCoreMenu){
+        this.mHasCoreMenu = hasCoreMenu;
+        invalidate();
+    }
+
+    /**
+     * 设定中间按钮的正常情况下的背景颜色
+     * @param color 颜色 0xffffffff
+     */
+    public void setCoreMenuNormalBackgroundColor(int color){
+        this.mCoreMenuNormalBackgroundColor = color;
+        invalidate();
+    }
+
+    /**
+     * 设定中间按钮的点击情况下的背景颜色
+     * @param color 颜色 0xffffffff
+     */
+    public void setCoreMenuSelectedBackgroundColor(int color){
+        this.mCoreMenuSelectedBackgroundColor = color;
+        invalidate();
+    }
+
+    /**
+     * 设定中间按钮的描边颜色
+     * @param color 颜色 0xffffffff
+     */
+    public void setCoreMenuStrokeColor(int color){
+        this.mCoreMenuStrokeColor = color;
+        invalidate();
+    }
+
+    /**
+     * 设定中间按钮的描边宽度
+     * @param size  宽度 1.0f
+     */
+    public void setCoreMenuStrokeSize(float size){
+        mCoreMenuStrokeSize = size;
+        invalidate();
+    }
+
+    /**
+     * 设定中间按钮的圆形半径
+     * @param radius 半径 40.0f
+     */
+    public void setCoreMenuRoundRadius(float radius){
+        mCoreMenuRoundRadius = radius;
+        invalidate();
+    }
+
+    /**
+     * 设定中间按钮的居中图片
+     * @param drawable 图片
+     */
+    public void setmCoreMenuDrawable(Drawable drawable){
+        this.mCoreMenuDrawable = DrawableUtils.drawableToBitmap(drawable);
+        invalidate();
+    }
+
+    /**
+     * 设定菜单数量
+     * @param number 数量 4
+     */
+    public void setRoundMenuNumber(int number){
+        this.mRoundMenuNumber = number;
+        invalidate();
+    }
+
+    /**
+     * 设定偏移角度
+     * @param degree 角度 45.0f
+     */
+    public void setRoundMenuDeviationDegree(float degree){
+        this.mRoundMenuDeviationDegree = degree;
+        invalidate();
+    }
+
+    /**
+     * 设定菜单的图片
+     * @param drawable 图片
+     */
+    public void setRoundMenuDrawable(Drawable drawable){
+        this.mRoundMenuDrawable = DrawableUtils.drawableToBitmap(drawable);
+        invalidate();
+    }
+
+    /**
+     * 设定正常情况下的菜单背景颜色
+     * @param color 颜色 0xffffffff
+     */
+    public void setRoundMenuNormalBackgroundColor(int color){
+        this.mRoundMenuNormalBackgroundColor = color;
+        invalidate();
+    }
+
+    /**
+     * 设定点击情况下的菜单背景颜色
+     * @param color 颜色 0xffffffff
+     */
+    public void setRoundMenuSelectedBackgroundColor(int color){
+        this.mRoundMenuSelectedBackgroundColor = color;
+        invalidate();
+    }
+
+    /**
+     * 设定菜单描边颜色
+     * @param color 颜色 0xffffffff
+     */
+    public void setRoundMenuStrokeColor(int color){
+        this.mRoundMenuStrokeColor = color;
+        invalidate();
+    }
+
+    /**
+     * 设定菜单描边宽度
+     * @param size 宽度 1.0f
+     */
+    public void setRoundMenuStrokeSize(float size){
+        this.mRoundMenuStrokeSize = size;
+        invalidate();
+    }
+
+    /**
+     * 设定菜单图片到中心点的距离 百分数
+     * @param distance 百分数 0.70f
+     */
+    public void setRoundMenuDistance(float distance){
+        if (distance > 1) return;
+        this.mRoundMenuDistance = distance;
+        invalidate();
+    }
+
+    /**
+     * 设定菜单是否连线到中心点
+     * @param is false
+     */
+    public void setIsDrawLineToCenter(boolean is){
+        this.mIsDrawLineToCenter = is;
+        invalidate();
+    }
 }
