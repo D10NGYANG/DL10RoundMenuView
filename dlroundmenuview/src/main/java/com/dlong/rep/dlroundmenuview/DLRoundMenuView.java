@@ -327,7 +327,7 @@ public class DLRoundMenuView extends View {
      * 设置点击监听
      * @param onMenuClickListener
      */
-    public void setOnItemClickListener(OnMenuClickListener onMenuClickListener){
+    public void setOnMenuClickListener(OnMenuClickListener onMenuClickListener){
         this.mMenuClickListener = onMenuClickListener;
     }
 
@@ -335,7 +335,7 @@ public class DLRoundMenuView extends View {
      * 设置长按监听
      * @param onMenuLongClickListener
      */
-    public void setOnLongItemClickListener(OnMenuLongClickListener onMenuLongClickListener){
+    public void setOnMenuLongClickListener(OnMenuLongClickListener onMenuLongClickListener){
         this.mMenuLongClickListener = onMenuLongClickListener;
     }
 
