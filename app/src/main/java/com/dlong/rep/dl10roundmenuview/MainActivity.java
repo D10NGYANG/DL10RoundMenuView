@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dlRoundMenuView = findViewById(R.id.dl_rmv);
-        dlRoundMenuView.setOnItemClickListener(new OnMenuClickListener() {
+        dlRoundMenuView.setOnMenuClickListener(new OnMenuClickListener() {
             @Override
             public void OnMenuClick(int position) {
                 //Toast.makeText(mContext, "点击了："+position,Toast.LENGTH_SHORT).show();

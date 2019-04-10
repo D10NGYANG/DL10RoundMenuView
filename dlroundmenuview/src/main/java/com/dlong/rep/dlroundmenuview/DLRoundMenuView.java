@@ -64,7 +64,7 @@ public class DLRoundMenuView extends View {
     /** 菜单偏移角度 */
     private float mRoundMenuDeviationDegree;
     /** 菜单图片 */
-    private ArrayList<Bitmap> mRoundMenuDrawableList;
+    private ArrayList<Bitmap> mRoundMenuDrawableList = new ArrayList<>();
     /** 是否画每个菜单扇形到中心点的直线 */
     private boolean mIsDrawLineToCenter;
     /** 菜单正常背景颜色 */
