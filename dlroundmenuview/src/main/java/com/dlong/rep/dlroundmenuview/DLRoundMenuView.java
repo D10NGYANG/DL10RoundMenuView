@@ -177,7 +177,7 @@ public class DLRoundMenuView extends View {
             roundMenuDrawable = null;
         }
         for (int i = 0; i < mRoundMenuNumber; i++) {
-            mRoundMenuDrawableList.set(i, roundMenuDrawable);
+            mRoundMenuDrawableList.add(i, roundMenuDrawable);
         }
         // 释放内存，回收资源
         a.recycle();
