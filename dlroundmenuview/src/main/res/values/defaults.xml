@@ -8,11 +8,11 @@
     <!-- 默认DLRoundMenuView中间按钮描边颜色 -->
     <color name="default_core_menu_stroke_color">#ff666666</color>
     <!-- 默认DLRoundMenuView中间按钮描边宽度 -->
-    <dimen name="default_core_menu_stroke_size">2dp</dimen>
+    <dimen name="default_core_menu_stroke_size">1px</dimen>
     <!-- 默认DLRoundMenuView中间按钮被点击时的背景颜色 -->
     <color name="default_core_menu_selected_background_color">#ff888888</color>
     <!-- 默认DLRoundMenuView中间按钮图片 -->
-    <drawable name="default_core_menu_drawable">@null</drawable>
+    <drawable name="default_core_menu_drawable">@drawable/def_icon</drawable>
     <!-- 默认DLRoundMenuView中间按钮圆形半径 -->
     <dimen name="default_core_menu_round_radius">40sp</dimen>
     <!-- 默认DLRoundMenuView菜单数量 -->
@@ -20,7 +20,7 @@
     <!-- 默认DLRoundMenuView菜单角度偏移 -->
     <integer name="default_round_menu_deviation_degree">0</integer>
     <!-- 默认DLRoundMenuView菜单中间图片 -->
-    <drawable name="default_round_menu_drawable">@null</drawable>
+    <drawable name="default_round_menu_drawable">@drawable/right</drawable>
     <!-- 默认DLRoundMenuView不画每个菜单扇形到中心点的直线 -->
     <bool name="default_is_draw_line_to_center">false</bool>
     <!-- 默认DLRoundMenuView菜单正常背景颜色 -->
@@ -30,7 +30,7 @@
     <!-- 默认DLRoundMenuView菜单描边颜色 -->
     <color name="default_round_menu_stroke_color">#ff666666</color>
     <!-- 默认DLRoundMenuView菜单描边宽度 -->
-    <dimen name="default_round_menu_stroke_size">2dp</dimen>
+    <dimen name="default_round_menu_stroke_size">1px</dimen>
     <!-- 默认DLRoundMenuView菜单图片与中心点的距离 -->
     <fraction name="default_round_menu_distance">70%</fraction>
 </resources>

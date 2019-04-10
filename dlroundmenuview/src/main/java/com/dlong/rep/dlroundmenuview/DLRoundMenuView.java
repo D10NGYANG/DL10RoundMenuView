@@ -10,13 +10,19 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuClickListener;
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuLongClickListener;
+import com.dlong.rep.dlroundmenuview.utils.DLMathUtils;
 import com.dlong.rep.dlroundmenuview.utils.DrawableUtils;
+
+import java.util.Date;
 
 /**
  * 类遥控器的圆形控制面板
@@ -55,6 +61,8 @@ public class DLRoundMenuView extends View {
     private int mRoundMenuNumber;
     /** 菜单偏移角度 */
     private float mRoundMenuDeviationDegree;
+    /** 真实菜单偏移角度 */
+    private float mRealRoundMenuDeviationDegree;
     /** 菜单图片 */
     private Bitmap mRoundMenuDrawable;
     /** 是否画每个菜单扇形到中心点的直线 */
@@ -93,6 +101,20 @@ public class DLRoundMenuView extends View {
     public void setOnLongItemClickListener(OnMenuLongClickListener onMenuLongClickListener){
         this.mMenuLongClickListener = onMenuLongClickListener;
     }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+                    if (mMenuLongClickListener != null) {
+                        mMenuLongClickListener.OnMenuLongClick(onClickState);
+                    }
+                    break;
+            }
+        }
+    };
 
 
     public DLRoundMenuView(Context context) {
@@ -199,57 +221,123 @@ public class DLRoundMenuView extends View {
         mCoreX = (float) getWidth() / 2;
         mCoreY = (float) getHeight() / 2;
         // 搞到一个正方形画板
-        RectF rect = new RectF(1, 1, getWidth() - 1, getHeight() - 1);
+        RectF rect = new RectF(mRoundMenuStrokeSize, mRoundMenuStrokeSize,
+                getWidth() - mRoundMenuStrokeSize, getHeight() - mRoundMenuStrokeSize);
         // 菜单数量要大于0
         if (mRoundMenuNumber > 0) {
             // 每个菜单弧形的角度
             float sweepAngle = (float) 360 / mRoundMenuNumber;
+            // 一个重要的点 0度在正X轴上，所以需要让它回到正Y轴上
+            // 计算真正的偏移角度
+            // -90度回到正Y轴；-每个菜单占据角度的一半，使得菜单中央回到正Y轴；再加上用户自己想修改的角度偏移
+            mRealRoundMenuDeviationDegree = mRoundMenuDeviationDegree - (sweepAngle / 2) - 90;
             for (int i = 0; i < mRoundMenuNumber; i++) {
                 // 画扇形
                 Paint paint = new Paint();
                 paint.setAntiAlias(true);
                 paint.setColor(onClickState == i?mRoundMenuSelectedBackgroundColor:mRoundMenuNormalBackgroundColor);
-                canvas.drawArc(rect, mRoundMenuDeviationDegree + (i * sweepAngle), sweepAngle, true, paint);
+                canvas.drawArc(rect, mRealRoundMenuDeviationDegree + (i * sweepAngle), sweepAngle, true, paint);
                 // 画扇形描边
                 paint = new Paint();
                 paint.setAntiAlias(true);
                 paint.setStrokeWidth(mRoundMenuStrokeSize);
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setColor(mRoundMenuStrokeColor);
-                canvas.drawArc(rect, mRoundMenuDeviationDegree + (i * sweepAngle), sweepAngle, mIsDrawLineToCenter, paint);
+                canvas.drawArc(rect, mRealRoundMenuDeviationDegree + (i * sweepAngle), sweepAngle, mIsDrawLineToCenter, paint);
                 // 画图案
-                Matrix matrix = new Matrix();
-                matrix.postTranslate((float) ((coreX + getWidth() / 2 * roundMenu.iconDistance) - (roundMenu.icon.getWidth() / 2)), coreY - (roundMenu.icon.getHeight() / 2));
-                matrix.postRotate(((i + 1) * sweepAngle + 90), coreX, coreY);
-                canvas.drawBitmap(roundMenu.icon, matrix, null);
+                if (null != mRoundMenuDrawable){
+                    Matrix matrix = new Matrix();
+                    matrix.postTranslate((float) ((mCoreX + getWidth() / 2 * mRoundMenuDistance) - (mRoundMenuDrawable.getWidth() / 2)),
+                            mCoreY - ((float) mRoundMenuDrawable.getHeight() / 2));
+                    matrix.postRotate(mRoundMenuDeviationDegree - 90 + (i * sweepAngle), mCoreX, mCoreY);
+                    canvas.drawBitmap(mRoundMenuDrawable, matrix, null);
+                }
             }
         }
 
         //画中心圆圈
-        if (isCoreMenu) {
-            //填充
-            RectF rect1 = new RectF(coreX - roundRadius, coreY - roundRadius, coreX + roundRadius, coreY + roundRadius);
+        if (mHasCoreMenu) {
+            // 画中心圆
+            RectF rect1 = new RectF(mCoreX - mCoreMenuRoundRadius, mCoreY - mCoreMenuRoundRadius,
+                    mCoreX + mCoreMenuRoundRadius, mCoreY + mCoreMenuRoundRadius);
             Paint paint = new Paint();
             paint.setAntiAlias(true);
-            paint.setStrokeWidth(coreMenuStrokeSize);
-            if (onClickState == -1) {
-                paint.setColor(coreMenuSelectColor);
-            } else {
-                paint.setColor(coreMenuColor);
-            }
+            paint.setStrokeWidth(mCoreMenuStrokeSize);
+            paint.setColor(onClickState == -1?mCoreMenuSelectedBackgroundColor:mCoreMenuNormalBackgroundColor);
             canvas.drawArc(rect1, 0, 360, true, paint);
-
             //画描边
             paint = new Paint();
             paint.setAntiAlias(true);
-            paint.setStrokeWidth(coreMenuStrokeSize);
+            paint.setStrokeWidth(mCoreMenuStrokeSize);
             paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(coreMenuStrokeColor);
+            paint.setColor(mCoreMenuStrokeColor);
             canvas.drawArc(rect1, 0, 360, true, paint);
-            if (coreBitmap != null) {
+            if (mCoreMenuDrawable != null) {
                 //画中心圆圈的“OK”图标
-                canvas.drawBitmap(coreBitmap, coreX - coreBitmap.getWidth() / 2, coreY - coreBitmap.getHeight() / 2, null);//在 0，0坐标开始画入src
+                canvas.drawBitmap(mCoreMenuDrawable, mCoreX - ((float) mCoreMenuDrawable.getWidth() / 2),
+                        mCoreY - ((float) mCoreMenuDrawable.getHeight() / 2), null);
             }
         }
     }
+
+    /**
+     * 触摸事件拦截
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float textX,textY;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                // 记录按下的时间
+                mTouchTime = new Date().getTime();
+                // 记录按下的位置
+                textX = event.getX();
+                textY = event.getY();
+                // 距离中心点之间的直线距离
+                double distance = DLMathUtils.getDistanceFromTwoSpot(mCoreX, mCoreY, textX, textY);
+                if (distance <= mCoreMenuRoundRadius) {
+                    // 点击的是中心圆
+                    onClickState = DL_TOUCH_CENTER;
+                } else if (distance <= getWidth() / 2) {
+                    // 点击的是某个扇形
+                    // 每个弧形的角度
+                    float sweepAngle = (float) 360 / mRoundMenuNumber;
+                    // 计算这根线的角度
+                    double angle = DLMathUtils.getRotationBetweenLines(mCoreX, mCoreY, textX, textY);
+                    // 这个angle的角度是从加上偏移角度，所以需要计算一下
+                    angle = (angle + 360 + (sweepAngle / 2) - (int) mRoundMenuDeviationDegree) % 360;
+                    // 根据角度得出点击的是那个扇形
+                    onClickState = (int) (angle / sweepAngle);
+                    if (onClickState >= mRoundMenuNumber) onClickState = 0;
+                } else {
+                    //点击了外面
+                    onClickState = DL_TOUCH_OUTSIDE;
+                }
+                mHandler.sendEmptyMessageDelayed(1, DL_DEFAULT_LONG_CLICK_TIME);
+                invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+                mHandler.removeMessages(1);
+                if ((new Date().getTime() - mTouchTime) < DL_DEFAULT_LONG_CLICK_TIME) {
+                    //点击小于400毫秒算点击
+                    if (mMenuClickListener != null) {
+                        mMenuClickListener.OnMenuClick(onClickState);
+                    }
+                }
+                onClickState = DL_TOUCH_OUTSIDE;
+                invalidate();
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_OUTSIDE:
+                mHandler.removeMessages(1);
+                onClickState = DL_TOUCH_OUTSIDE;
+                invalidate();
+                break;
+        }
+        return true;
+    }
+
+
 }
