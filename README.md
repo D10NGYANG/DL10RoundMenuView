@@ -8,7 +8,7 @@ Android 圆形遥控器按钮盘 带中间按钮
 ![](/img/sc_2.png)
 ![](/img/sc_3.png)
 ![](/img/sc_4.png)
-
+![](/img/sc_5.png)
 # 使用说明
 ## 添加依赖
 Step 1. Add the JitPack repository to your build file 
