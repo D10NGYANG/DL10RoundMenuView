@@ -25,7 +25,7 @@ Step 2. Add the dependency
 
 ```java
 	dependencies {
-	        implementation 'com.github.D10NGYANG:DL10RoundMenuView:1.0.5'
+	        implementation 'com.github.D10NGYANG:DL10RoundMenuView:1.0.6'
 	}
 ```
 ## 在布局中使用
