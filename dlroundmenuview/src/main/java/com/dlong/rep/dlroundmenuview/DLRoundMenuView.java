@@ -12,7 +12,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -20,6 +19,7 @@ import android.view.View;
 
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuClickListener;
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuLongClickListener;
+import com.dlong.rep.dlroundmenuview.Interface.OnMenuTouchListener;
 import com.dlong.rep.dlroundmenuview.utils.DLMathUtils;
 import com.dlong.rep.dlroundmenuview.utils.DrawableUtils;
 
@@ -85,6 +85,7 @@ public class DLRoundMenuView extends View {
     /** 设置接口 */
     private OnMenuClickListener mMenuClickListener;
     private OnMenuLongClickListener mMenuLongClickListener;
+    private OnMenuTouchListener mTouchListener;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler(){
@@ -325,6 +326,7 @@ public class DLRoundMenuView extends View {
                 invalidate();
                 break;
         }
+        mTouchListener.OnTouch(event);
         return true;
     }
 
@@ -342,6 +344,14 @@ public class DLRoundMenuView extends View {
      */
     public void setOnMenuLongClickListener(OnMenuLongClickListener onMenuLongClickListener){
         this.mMenuLongClickListener = onMenuLongClickListener;
+    }
+
+    /**
+     * 设置触摸监听
+     * @param onMenuTouchListener
+     */
+    public void setOnMenuTouchListener(OnMenuTouchListener onMenuTouchListener) {
+        this.mTouchListener = onMenuTouchListener;
     }
 
     /**
