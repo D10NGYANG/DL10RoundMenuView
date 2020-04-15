@@ -230,6 +230,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("TAG", "点击了："+position);
             }
         });
+        dlRoundMenuView.setOnMenuTouchListener(new OnMenuTouchListener() {
+            @Override
+            public void OnTouch(MotionEvent event) {
+                // 触摸监听
+            }
+        });
     }
 }
 ```

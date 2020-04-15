@@ -4,10 +4,12 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.dlong.rep.dlroundmenuview.DLRoundMenuView;
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuClickListener;
+import com.dlong.rep.dlroundmenuview.Interface.OnMenuTouchListener;
 
 public class MainActivity extends AppCompatActivity {
     private Context mContext = this;
@@ -24,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
             public void OnMenuClick(int position) {
                 //Toast.makeText(mContext, "点击了："+position,Toast.LENGTH_SHORT).show();
                 Log.e("TAG", "点击了："+position);
+            }
+        });
+        dlRoundMenuView.setOnMenuTouchListener(new OnMenuTouchListener() {
+            @Override
+            public void OnTouch(MotionEvent event) {
+                // 触摸监听
             }
         });
     }
