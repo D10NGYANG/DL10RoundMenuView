@@ -10,6 +10,8 @@ Android 圆形遥控器按钮盘 带中间按钮
 ![](/img/sc_4.png)
 ![](/img/sc_5.png)
 # 使用说明
+## 注意说明
+**版本1.0.7已改成androidx+kotlin代码，如有appcompat-v7的需求，请使用1.0.6版本。**
 ## 添加依赖
 Step 1. Add the JitPack repository to your build file 
 
@@ -25,7 +27,7 @@ Step 2. Add the dependency
 
 ```java
 	dependencies {
-	        implementation 'com.github.D10NGYANG:DL10RoundMenuView:1.0.6'
+	        implementation 'com.github.D10NGYANG:DL10RoundMenuView:1.0.7'
 	}
 ```
 ## 在布局中使用
@@ -212,30 +214,31 @@ dlRoundMenuView.setRoundMenuDistance(0.8f);
 ```
 ## 使用代码
 
-```java
-public class MainActivity extends AppCompatActivity {
-    private Context mContext = this;
-    private DLRoundMenuView dlRoundMenuView;
+```kotlin
+class MainActivity : AppCompatActivity() {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    private lateinit var binding: ActivityMainBinding
 
-        dlRoundMenuView = findViewById(R.id.dl_rmv);
-        dlRoundMenuView.setOnMenuClickListener(new OnMenuClickListener() {
-            @Override
-            public void OnMenuClick(int position) {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.dlRmv.setOnMenuClickListener(object : OnMenuClickListener {
+            override fun OnMenuClick(position: Int) {
                 //Toast.makeText(mContext, "点击了："+position,Toast.LENGTH_SHORT).show();
-                Log.e("TAG", "点击了："+position);
+                Log.e("TAG", "点击了：$position")
             }
-        });
-        dlRoundMenuView.setOnMenuTouchListener(new OnMenuTouchListener() {
-            @Override
-            public void OnTouch(MotionEvent event) {
+        })
+        binding.dlRmv.setOnMenuTouchListener(object : OnMenuTouchListener {
+            override fun OnTouch(event: MotionEvent?) {
                 // 触摸监听
             }
-        });
+        })
     }
 }
+```
+
+# 混淆规则
+```kotlin
+-keep class com.dlong.rep.dlroundmenuview.** {*;}
+-dontwarn com.dlong.rep.dlroundmenuview.**
 ```
