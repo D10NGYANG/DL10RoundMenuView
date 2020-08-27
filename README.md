@@ -1,6 +1,6 @@
 # DL10RoundMenuView
 Android 圆形遥控器按钮盘 带中间按钮
-
+[![](https://jitpack.io/v/D10NGYANG/DL10RoundMenuView.svg)](https://jitpack.io/#D10NGYANG/DL10RoundMenuView)
 链接：https://blog.csdn.net/sinat_38184748/article/details/89182372
 
 # 效果图
