@@ -231,8 +231,9 @@ class MainActivity : AppCompatActivity() {
             }
         })
         binding.dlRmv.setOnMenuTouchListener(object : OnMenuTouchListener {
-            override fun OnTouch(event: MotionEvent?) {
-                // 触摸监听
+            override fun OnTouch(event: MotionEvent?, position: Int) {
+                Log.i("触摸", "事件=${event.toString()}")
+                Log.v("触摸", "位置=$position")
             }
         })
     }
