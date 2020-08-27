@@ -296,7 +296,7 @@ class DLRoundMenuView constructor(
                 invalidate()
             }
         }
-        mTouchListener?.OnTouch(event)
+        mTouchListener?.OnTouch(event, onClickState)
         return true
     }
 
