@@ -15,6 +15,7 @@ import com.dlong.rep.dlroundmenuview.Interface.OnMenuLongClickListener
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuTouchListener
 import com.dlong.rep.dlroundmenuview.utils.DLMathUtils
 import com.dlong.rep.dlroundmenuview.utils.DrawableUtils
+import java.lang.Exception
 import java.util.*
 
 /**
@@ -115,7 +116,10 @@ class DLRoundMenuView constructor(
         val defaultRoundMenuSelectedBackgroundColor = ContextCompat.getColor(context, R.color.default_round_menu_selected_background_color)
         val defaultRoundMenuStrokeColor = ContextCompat.getColor(context, R.color.default_round_menu_stroke_color)
         val defaultRoundMenuStrokeSize = res.getDimension(R.dimen.default_round_menu_stroke_size)
-        val defaultRoundMenuDistance = res.getFraction(R.fraction.default_round_menu_distance, 1, 1)
+        //val defaultRoundMenuDistance = res.getFraction(R.fraction.default_round_menu_distance, 1, 1)
+        val defaultRoundMenuDistance = try {
+            res.getFraction(R.fraction.default_round_menu_distance, 1, 1)
+        } catch (e: Exception) { 0.7f }
         // 读取配置信息
         val a = context.obtainStyledAttributes(attrs, R.styleable.DLRoundMenuView)
         mHasCoreMenu = a.getBoolean(R.styleable.DLRoundMenuView_RMHasCoreMenu, defaultHasCoreMenu)
