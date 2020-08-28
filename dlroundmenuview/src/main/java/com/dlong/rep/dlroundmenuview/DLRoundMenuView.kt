@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuClickListener
+import com.dlong.rep.dlroundmenuview.Interface.OnMenuListener
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuLongClickListener
 import com.dlong.rep.dlroundmenuview.Interface.OnMenuTouchListener
 import com.dlong.rep.dlroundmenuview.utils.DLMathUtils
@@ -88,12 +89,16 @@ class DLRoundMenuView constructor(
     private var mMenuClickListener: OnMenuClickListener? = null
     private var mMenuLongClickListener: OnMenuLongClickListener? = null
     private var mTouchListener: OnMenuTouchListener? = null
+    private var mMenuListener: OnMenuListener? = null
 
     @SuppressLint("HandlerLeak")
     private val mHandler: Handler = object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
-                1 -> mMenuLongClickListener?.OnMenuLongClick(onClickState)
+                1 -> {
+                    mMenuLongClickListener?.OnMenuLongClick(onClickState)
+                    mMenuListener?.OnMenuLongClick(onClickState)
+                }
             }
         }
     }
@@ -290,6 +295,7 @@ class DLRoundMenuView constructor(
                 if (Date().time - mTouchTime < DL_DEFAULT_LONG_CLICK_TIME) {
                     //点击小于400毫秒算点击
                     mMenuClickListener?.OnMenuClick(onClickState)
+                    mMenuListener?.OnMenuClick(onClickState)
                 }
                 onClickState = DL_TOUCH_OUTSIDE
                 invalidate()
@@ -301,6 +307,7 @@ class DLRoundMenuView constructor(
             }
         }
         mTouchListener?.OnTouch(event, onClickState)
+        mMenuListener?.OnTouch(event, onClickState)
         return true
     }
 
@@ -326,6 +333,16 @@ class DLRoundMenuView constructor(
      */
     fun setOnMenuTouchListener(onMenuTouchListener: OnMenuTouchListener?) {
         mTouchListener = onMenuTouchListener
+    }
+
+    /**
+     * 设置lambda监听器
+     * @param listener [@kotlin.ExtensionFunctionType] Function1<OnMenuListener, Unit>
+     */
+    fun setOnMenuListener(listener: OnMenuListener.() -> Unit) {
+        val menuListener = OnMenuListener()
+        menuListener.listener()
+        this.mMenuListener = menuListener
     }
 
     /**
